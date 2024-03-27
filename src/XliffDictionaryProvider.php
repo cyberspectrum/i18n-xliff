@@ -1,23 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/i18n-xliff.
- *
- * (c) 2018 CyberSpectrum.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/i18n-xliff
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2018 CyberSpectrum.
- * @license    https://github.com/cyberspectrum/i18n-xliff/blob/master/LICENSE MIT
- * @filesource
- */
-
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\I18N\Xliff;
 
@@ -29,15 +12,28 @@ use CyberSpectrum\I18N\Dictionary\WritableDictionaryProviderInterface;
 use CyberSpectrum\I18N\Exception\DictionaryNotFoundException;
 use CyberSpectrum\I18N\Xliff\Exception\LanguageMismatchException;
 use CyberSpectrum\I18N\Xliff\Xml\XliffFile;
+use InvalidArgumentException;
+use Iterator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
+use RuntimeException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\PathUtil\Path;
+use Traversable;
+
+use function dirname;
+use function file_exists;
+use function is_dir;
+use function is_readable;
+use function is_writable;
+use function mkdir;
 
 /**
  * This provides access to the xliff translations in the store.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class XliffDictionaryProvider implements
     DictionaryProviderInterface,
@@ -46,22 +42,16 @@ class XliffDictionaryProvider implements
 {
     use LoggerAwareTrait;
 
-    /**
-     * The root directory.
-     *
-     * @var string
-     */
-    private $rootDir;
+    /** The root directory. */
+    private string $rootDir;
 
     /**
      * The directory mask to use when working with subdirectories.
      *
      * If not empty, translations will get stored in sub directories naming the source an target language.
      * If empty, they will get stored in the root directory.
-     *
-     * @var string
      */
-    private $subDirectoryMask;
+    private string $subDirectoryMask;
 
     /**
      * Create a new instance.
@@ -69,31 +59,27 @@ class XliffDictionaryProvider implements
      * @param string $rootDir          The root directory.
      * @param string $subDirectoryMask The sub directory mask to apply. Allowed place holders: "{source}" "{target}".
      *
-     * @throws \InvalidArgumentException When the root dir is invalid.
+     * @throws InvalidArgumentException When the root dir is invalid.
      */
     public function __construct(
         string $rootDir,
         string $subDirectoryMask = '{source}-{target}'
     ) {
-        $rootDir = Path::canonicalize($rootDir);
-        if (false === realpath($rootDir) || !is_dir($rootDir)) {
-            throw new \InvalidArgumentException('Root directory does not exist or is not a directory.');
+        $fileSystem = new Filesystem();
+
+        $rootDir = $fileSystem->readlink($rootDir, true);
+        if (null === $rootDir) {
+            throw new InvalidArgumentException('Root directory does not exist or is not a directory.');
         }
-        $this->rootDir          = realpath($rootDir);
+        $this->rootDir          = $rootDir;
         $this->subDirectoryMask = $subDirectoryMask;
         $this->setLogger(new NullLogger());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return \Traversable|DictionaryInformation[]
-     */
-    public function getAvailableDictionaries(): \Traversable
+    public function getAvailableDictionaries(): Traversable
     {
         foreach ($this->getFinder() as $fileInfo) {
-            /** @var SplFileInfo $fileInfo */
-            if (is_readable($fileInfo->getPathname())) {
+            if ($fileInfo->isReadable()) {
                 yield $this->createInformation($fileInfo);
             }
         }
@@ -105,8 +91,6 @@ class XliffDictionaryProvider implements
      * @param string $name           The name of the dictionary.
      * @param string $sourceLanguage The source language.
      * @param string $targetLanguage The target language.
-     *
-     * @return string
      */
     private function getFileNameFor(string $name, string $sourceLanguage, string $targetLanguage): string
     {
@@ -116,7 +100,7 @@ class XliffDictionaryProvider implements
                 . DIRECTORY_SEPARATOR . $name . '.xlf';
         }
 
-        return $this->rootDir . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . $name . '.xlf';
+        return $this->rootDir . DIRECTORY_SEPARATOR . $name . '.xlf';
     }
 
     /**
@@ -130,7 +114,9 @@ class XliffDictionaryProvider implements
         string $targetLanguage,
         array $customData = []
     ): DictionaryInterface {
-        $this->logger->debug('Xliff: opening dictionary ' . $name);
+        if ($this->logger) {
+            $this->logger->debug('Xliff: opening dictionary ' . $name);
+        }
         if (!is_readable($fileName = $this->getFileNameFor($name, $sourceLanguage, $targetLanguage))) {
             throw new DictionaryNotFoundException($name, $sourceLanguage, $targetLanguage);
         }
@@ -140,13 +126,10 @@ class XliffDictionaryProvider implements
         return $dictionary;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getAvailableWritableDictionaries(): \Traversable
+    public function getAvailableWritableDictionaries(): Traversable
     {
         foreach ($this->getFinder() as $fileInfo) {
-            if (is_writable($fileInfo->getPathname())) {
+            if ($fileInfo->isWritable()) {
                 yield $this->createInformation($fileInfo);
             }
         }
@@ -163,7 +146,9 @@ class XliffDictionaryProvider implements
         string $targetLanguage,
         array $customData = []
     ): WritableDictionaryInterface {
-        $this->logger->debug('Xliff: opening writable dictionary ' . $name);
+        if ($this->logger) {
+            $this->logger->debug('Xliff: opening writable dictionary ' . $name);
+        }
         if (!file_exists($fileName = $this->getFileNameFor($name, $sourceLanguage, $targetLanguage))) {
             throw new DictionaryNotFoundException($name, $sourceLanguage, $targetLanguage);
         }
@@ -177,8 +162,8 @@ class XliffDictionaryProvider implements
     /**
      * {@inheritDoc}
      *
-     * @throws \InvalidArgumentException When the dictionary already exists.
-     * @throws \RuntimeException When the dictionary file can not be created.
+     * @throws InvalidArgumentException When the dictionary already exists.
+     * @throws RuntimeException When the dictionary file can not be created.
      */
     public function createDictionary(
         string $name,
@@ -186,17 +171,20 @@ class XliffDictionaryProvider implements
         string $targetLanguage,
         array $customData = []
     ): WritableDictionaryInterface {
-        $this->logger->debug('Xliff: creating new dictionary ' . $name);
+        if ($this->logger) {
+            $this->logger->debug('Xliff: creating new dictionary ' . $name);
+        }
+
         if (file_exists($fileName = $this->getFileNameFor($name, $sourceLanguage, $targetLanguage))) {
-            throw new \InvalidArgumentException('Dictionary ' . $name . ' already exists.');
+            throw new InvalidArgumentException('Dictionary ' . $name . ' already exists.');
         }
 
         if (!is_writable($this->rootDir)) {
-            throw new \RuntimeException('Dictionary root directory is not writable.');
+            throw new RuntimeException('Dictionary root directory is not writable.');
         }
 
-        if (!is_dir($dir = \dirname($fileName)) && !mkdir($dir) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created', $dir));
+        if (!is_dir($dir = dirname($fileName)) && !mkdir($dir) && !is_dir($dir)) {
+            throw new RuntimeException(sprintf('Directory "%s" could not be created', $dir));
         }
 
         return new WritableXliffDictionary($fileName, $sourceLanguage, $targetLanguage);
@@ -206,8 +194,6 @@ class XliffDictionaryProvider implements
      * Create an information container for the passed xlf file.
      *
      * @param SplFileInfo $fileInfo The file info of the xlf file.
-     *
-     * @return DictionaryInformation
      */
     private function createInformation(SplFileInfo $fileInfo): DictionaryInformation
     {
@@ -224,16 +210,24 @@ class XliffDictionaryProvider implements
     /**
      * Create a finder instance.
      *
-     * @return \Iterator
+     * @return Iterator<string, SplFileInfo>
      */
-    private function getFinder(): \Iterator
+    private function getFinder(): Iterator
     {
-        return Finder::create()
+        /**
+         * @var Iterator<string, SplFileInfo> $iterator
+         * @psalm-suppress UnnecessaryVarAnnotation
+         * Symfony 4.4 denotes the iterator as "Iterator|array<array-key, SplFileInfo>"
+         * remove when we drop sf 4.4
+         */
+        $iterator = Finder::create()
             ->in($this->rootDir)
             ->ignoreUnreadableDirs()
             ->files()
             ->name('*.xlf')
             ->getIterator();
+
+        return $iterator;
     }
 
     /**
@@ -243,8 +237,6 @@ class XliffDictionaryProvider implements
      * @param string              $targetLanguage The target language.
      * @param DictionaryInterface $dictionary     The dictionary.
      *
-     * @return void
-     *
      * @throws LanguageMismatchException When the languages do not match the required language.
      */
     private function guardLanguages(
@@ -252,8 +244,10 @@ class XliffDictionaryProvider implements
         string $targetLanguage,
         DictionaryInterface $dictionary
     ): void {
-        if ($dictionary->getSourceLanguage() !== $sourceLanguage
-            || $dictionary->getTargetLanguage() !== $targetLanguage) {
+        if (
+            $dictionary->getSourceLanguage() !== $sourceLanguage
+            || $dictionary->getTargetLanguage() !== $targetLanguage
+        ) {
             throw new LanguageMismatchException(
                 $sourceLanguage,
                 $dictionary->getSourceLanguage(),
