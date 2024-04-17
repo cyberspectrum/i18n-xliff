@@ -28,7 +28,7 @@ class XliffDictionary implements DictionaryInterface
     public function __construct(?string $filename = null)
     {
         $this->xliff    = new XliffFile();
-        if ($filename && is_readable($filename)) {
+        if ((bool) $filename && is_readable($filename)) {
             $this->xliff->load($filename);
         }
     }

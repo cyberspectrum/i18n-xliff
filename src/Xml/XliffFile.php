@@ -17,9 +17,11 @@ use InvalidArgumentException;
 use RuntimeException;
 
 /**
- * This is an xliff implementation.
+ * This is a xliff implementation.
  *
  * @internal Only to be used within this abstraction.
+ *
+ * @psalm-suppress PropertyNotSetInConstructor The properties are inherited from the parent class and set by loading.
  */
 final class XliffFile extends DOMDocument
 {
@@ -200,7 +202,7 @@ final class XliffFile extends DOMDocument
         }
 
         if (
-            $this->documentElement->isDefaultNamespace(self::XLIFF_NS)
+            $this->documentElement?->isDefaultNamespace(self::XLIFF_NS)
             && $transUnit = $this->getXPathFirstItem(
                 '/xlf:xliff/xlf:file/xlf:body/xlf:trans-unit[@id=\'' . $identifier . '\']'
             )

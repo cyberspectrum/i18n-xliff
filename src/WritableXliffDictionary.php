@@ -57,10 +57,10 @@ class WritableXliffDictionary extends XliffDictionary implements
         }
 
         if (!file_exists($filename)) {
-            if ($sourceLanguage) {
+            if ((bool) $sourceLanguage) {
                 $this->setSourceLanguage($sourceLanguage);
             }
-            if ($targetLanguage) {
+            if ((bool) $targetLanguage) {
                 $this->setTargetLanguage($targetLanguage);
             }
             $this->markChanged();
