@@ -16,7 +16,6 @@ use InvalidArgumentException;
 use Iterator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -73,7 +72,6 @@ class XliffDictionaryProvider implements
         }
         $this->rootDir          = $rootDir;
         $this->subDirectoryMask = $subDirectoryMask;
-        $this->setLogger(new NullLogger());
     }
 
     public function getAvailableDictionaries(): Traversable
