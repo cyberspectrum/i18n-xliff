@@ -32,6 +32,8 @@ use function mkdir;
 /**
  * This provides access to the xliff translations in the store.
  *
+ * @api
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class XliffDictionaryProvider implements

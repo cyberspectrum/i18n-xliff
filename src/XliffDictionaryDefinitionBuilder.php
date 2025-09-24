@@ -16,6 +16,8 @@ use InvalidArgumentException;
  * @psalm-type TXliffDictionaryConfigurationArray=array{
  *   name: string,
  * }
+ *
+ * @api
  */
 final class XliffDictionaryDefinitionBuilder implements DefinitionBuilderInterface
 {

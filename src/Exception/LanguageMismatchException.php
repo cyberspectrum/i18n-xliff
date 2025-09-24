@@ -6,6 +6,8 @@ namespace CyberSpectrum\I18N\Xliff\Exception;
 
 /**
  * This is thrown when the languages in a file do not match the expectations.
+ *
+ * @api
  */
 final class LanguageMismatchException extends \RuntimeException
 {
