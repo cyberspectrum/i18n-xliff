@@ -72,6 +72,7 @@ class WritableXliffDictionary extends XliffDictionary implements
      *
      * @throws TranslationAlreadyContainedException When the translation is already contained.
      */
+    #[\Override]
     public function add(string $key): WritableTranslationValueInterface
     {
         if ($this->xliff->searchTranslationUnit($key)) {
@@ -83,6 +84,7 @@ class WritableXliffDictionary extends XliffDictionary implements
         return new WritableXliffTranslationValue($this, $this->xliff->createTranslationUnit($key));
     }
 
+    #[\Override]
     public function remove(string $key): void
     {
         if (null === $unit = $this->xliff->searchTranslationUnit($key)) {
@@ -98,6 +100,7 @@ class WritableXliffDictionary extends XliffDictionary implements
         $this->markChanged();
     }
 
+    #[\Override]
     public function getWritable(string $key): WritableTranslationValueInterface
     {
         if (null === $unit = $this->xliff->searchTranslationUnit($key)) {
@@ -112,6 +115,7 @@ class WritableXliffDictionary extends XliffDictionary implements
      *
      * @throws RuntimeException When already buffering.
      */
+    #[\Override]
     public function beginBuffering(): void
     {
         if ($this->buffering) {
@@ -126,6 +130,7 @@ class WritableXliffDictionary extends XliffDictionary implements
      *
      * @throws RuntimeException When the dictionary is not currently buffering.
      */
+    #[\Override]
     public function commitBuffer(): void
     {
         if (!$this->buffering) {
@@ -141,6 +146,7 @@ class WritableXliffDictionary extends XliffDictionary implements
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function isBuffering(): bool
     {
         return $this->buffering;

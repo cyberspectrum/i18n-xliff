@@ -22,6 +22,7 @@ class XliffDictionaryDefinitionBuilder implements DefinitionBuilderInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function build(Configuration $configuration, array $data): Definition
     {
         $this->checkConfiguration($data);

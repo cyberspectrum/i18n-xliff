@@ -28,6 +28,7 @@ class WritableXliffTranslationValue extends XliffTranslationValue implements Wri
         parent::__construct($dictionary, $node);
     }
 
+    #[\Override]
     public function setSource(string $value): void
     {
         if (null === ($element = $this->getSourceElement())) {
@@ -53,6 +54,7 @@ class WritableXliffTranslationValue extends XliffTranslationValue implements Wri
         $this->dictionary->markChanged();
     }
 
+    #[\Override]
     public function setTarget(string $value): void
     {
         if (null === ($element = $this->getTargetElement())) {
@@ -72,6 +74,7 @@ class WritableXliffTranslationValue extends XliffTranslationValue implements Wri
         $this->dictionary->markChanged();
     }
 
+    #[\Override]
     public function clearSource(): void
     {
         if (($element = $this->getSourceElement()) && $element->firstChild) {
@@ -79,6 +82,7 @@ class WritableXliffTranslationValue extends XliffTranslationValue implements Wri
         }
     }
 
+    #[\Override]
     public function clearTarget(): void
     {
         if (($element = $this->getTargetElement()) && $element->firstChild) {

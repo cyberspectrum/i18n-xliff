@@ -74,6 +74,7 @@ class XliffDictionaryProvider implements
         $this->subDirectoryMask = $subDirectoryMask;
     }
 
+    #[\Override]
     public function getAvailableDictionaries(): Traversable
     {
         foreach ($this->getFinder() as $fileInfo) {
@@ -106,6 +107,7 @@ class XliffDictionaryProvider implements
      *
      * @throws DictionaryNotFoundException When the file can not be found.
      */
+    #[\Override]
     public function getDictionary(
         string $name,
         string $sourceLanguage,
@@ -124,6 +126,7 @@ class XliffDictionaryProvider implements
         return $dictionary;
     }
 
+    #[\Override]
     public function getAvailableWritableDictionaries(): Traversable
     {
         foreach ($this->getFinder() as $fileInfo) {
@@ -138,6 +141,7 @@ class XliffDictionaryProvider implements
      *
      * @throws DictionaryNotFoundException When the file can not be found.
      */
+    #[\Override]
     public function getDictionaryForWrite(
         string $name,
         string $sourceLanguage,
@@ -163,6 +167,7 @@ class XliffDictionaryProvider implements
      * @throws InvalidArgumentException When the dictionary already exists.
      * @throws RuntimeException When the dictionary file can not be created.
      */
+    #[\Override]
     public function createDictionary(
         string $name,
         string $sourceLanguage,

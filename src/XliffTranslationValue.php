@@ -29,11 +29,13 @@ class XliffTranslationValue implements TranslationValueInterface
         $this->node       = $node;
     }
 
+    #[\Override]
     public function getKey(): string
     {
         return $this->node->getAttributeNS(XliffFile::XLIFF_NS, 'id');
     }
 
+    #[\Override]
     public function getSource(): ?string
     {
         if (($element = $this->getSourceElement()) && $element->firstChild) {
@@ -43,6 +45,7 @@ class XliffTranslationValue implements TranslationValueInterface
         return null;
     }
 
+    #[\Override]
     public function getTarget(): ?string
     {
         if (($element = $this->getTargetElement()) && $element->firstChild) {
@@ -52,11 +55,13 @@ class XliffTranslationValue implements TranslationValueInterface
         return null;
     }
 
+    #[\Override]
     public function isSourceEmpty(): bool
     {
         return (null === ($element = $this->getSourceElement()) || null === $element->firstChild);
     }
 
+    #[\Override]
     public function isTargetEmpty(): bool
     {
         return (null === ($element = $this->getTargetElement()) || null === $element->firstChild);

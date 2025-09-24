@@ -33,6 +33,7 @@ class XliffDictionary implements DictionaryInterface
         }
     }
 
+    #[\Override]
     public function keys(): Traversable
     {
         return $this->xliff->extractTranslationKeys();
@@ -43,6 +44,7 @@ class XliffDictionary implements DictionaryInterface
      *
      * @throws TranslationNotFoundException When the translation unit can not be found in the XLIFF file.
      */
+    #[\Override]
     public function get(string $key): TranslationValueInterface
     {
         if (null === $unit = $this->xliff->searchTranslationUnit($key)) {
@@ -52,16 +54,19 @@ class XliffDictionary implements DictionaryInterface
         return new XliffTranslationValue($this, $unit);
     }
 
+    #[\Override]
     public function has(string $key): bool
     {
         return null !== $this->xliff->searchTranslationUnit($key);
     }
 
+    #[\Override]
     public function getSourceLanguage(): string
     {
         return $this->xliff->getSourceLanguage();
     }
 
+    #[\Override]
     public function getTargetLanguage(): string
     {
         return $this->xliff->getTargetLanguage();

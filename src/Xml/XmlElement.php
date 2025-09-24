@@ -34,6 +34,7 @@ final class XmlElement extends DOMElement
      *
      * @link https://php.net/manual/en/domelement.setattributens.php
      */
+    #[\Override]
     public function setAttributeNS($namespace, $qualifiedName, $value): void
     {
         if (
@@ -63,6 +64,7 @@ final class XmlElement extends DOMElement
      *
      * @psalm-suppress MixedInferredReturnType
      */
+    #[\Override]
     public function getAttributeNS($namespace, $localName): string
     {
         if (
