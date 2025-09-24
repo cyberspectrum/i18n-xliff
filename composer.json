@@ -41,6 +41,9 @@
       "CyberSpectrum\\I18N\\Xliff\\Test\\": "tests"
     }
   },
+  "config": {
+    "sort-packages": true
+  },
   "extra": {
     "branch-alias": {
       "dev-fix/phpcq-2": "1.1.x-dev"
