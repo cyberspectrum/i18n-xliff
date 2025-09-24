@@ -15,7 +15,7 @@ use LogicException;
  *
  * @property WritableXliffDictionary $dictionary The writable dictionary.
  */
-class WritableXliffTranslationValue extends XliffTranslationValue implements WritableTranslationValueInterface
+final class WritableXliffTranslationValue extends XliffTranslationValue implements WritableTranslationValueInterface
 {
     /**
      * Create a new instance.

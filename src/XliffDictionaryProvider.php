@@ -34,7 +34,7 @@ use function mkdir;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class XliffDictionaryProvider implements
+final class XliffDictionaryProvider implements
     DictionaryProviderInterface,
     WritableDictionaryProviderInterface,
     LoggerAwareInterface

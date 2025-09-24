@@ -22,7 +22,7 @@ use function is_writable;
 /**
  * This represents a dictionary that can read and write xliff files.
  */
-class WritableXliffDictionary extends XliffDictionary implements
+final class WritableXliffDictionary extends XliffDictionary implements
     WritableDictionaryInterface,
     BufferedWritableDictionaryInterface
 {

@@ -17,7 +17,7 @@ use InvalidArgumentException;
  *   name: string,
  * }
  */
-class XliffDictionaryDefinitionBuilder implements DefinitionBuilderInterface
+final class XliffDictionaryDefinitionBuilder implements DefinitionBuilderInterface
 {
     /**
      * {@inheritDoc}

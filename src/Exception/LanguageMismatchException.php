@@ -7,7 +7,7 @@ namespace CyberSpectrum\I18N\Xliff\Exception;
 /**
  * This is thrown when the languages in a file do not match the expectations.
  */
-class LanguageMismatchException extends \RuntimeException
+final class LanguageMismatchException extends \RuntimeException
 {
     /** The expected source. */
     private string $expectedSource;
