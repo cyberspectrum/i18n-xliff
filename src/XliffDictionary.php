@@ -1,23 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/i18n-xliff.
- *
- * (c) 2018 CyberSpectrum.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/i18n-xliff
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2018 CyberSpectrum.
- * @license    https://github.com/cyberspectrum/i18n-xliff/blob/master/LICENSE MIT
- * @filesource
- */
-
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\I18N\Xliff;
 
@@ -25,44 +8,33 @@ use CyberSpectrum\I18N\Dictionary\DictionaryInterface;
 use CyberSpectrum\I18N\Exception\TranslationNotFoundException;
 use CyberSpectrum\I18N\TranslationValue\TranslationValueInterface;
 use CyberSpectrum\I18N\Xliff\Xml\XliffFile;
+use Traversable;
+
+use function is_readable;
 
 /**
  * This represents a dictionary that can read and write xliff files.
  */
 class XliffDictionary implements DictionaryInterface
 {
-    /**
-     * The filename to work on.
-     *
-     * @var string|null
-     */
-    protected $filename;
-
-    /**
-     * The XLIFF document.
-     *
-     * @var XliffFile
-     */
-    protected $xliff;
+    /** The XLIFF document. */
+    protected XliffFile $xliff;
 
     /**
      * Create a new instance.
      *
      * @param string|null $filename The filename to use or null when none should be loaded.
      */
-    public function __construct($filename = null)
+    public function __construct(?string $filename = null)
     {
         $this->xliff    = new XliffFile();
-        $this->filename = $filename;
-        if ($this->filename && is_readable($this->filename)) {
-            $this->xliff->load($this->filename);
+        if ((bool) $filename && is_readable($filename)) {
+            $this->xliff->load($filename);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function keys(): \Traversable
+    #[\Override]
+    public function keys(): Traversable
     {
         return $this->xliff->extractTranslationKeys();
     }
@@ -72,6 +44,7 @@ class XliffDictionary implements DictionaryInterface
      *
      * @throws TranslationNotFoundException When the translation unit can not be found in the XLIFF file.
      */
+    #[\Override]
     public function get(string $key): TranslationValueInterface
     {
         if (null === $unit = $this->xliff->searchTranslationUnit($key)) {
@@ -81,25 +54,19 @@ class XliffDictionary implements DictionaryInterface
         return new XliffTranslationValue($this, $unit);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     public function has(string $key): bool
     {
         return null !== $this->xliff->searchTranslationUnit($key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     public function getSourceLanguage(): string
     {
         return $this->xliff->getSourceLanguage();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     public function getTargetLanguage(): string
     {
         return $this->xliff->getTargetLanguage();
