@@ -23,7 +23,7 @@
   "require": {
     "php": "^8.1",
     "ext-dom": "*",
-    "cyberspectrum/i18n": "^1.1@dev",
+    "cyberspectrum/i18n": "^1.0.0",
     "psr/log": "^2.0 || ^3.0",
     "symfony/filesystem": "^5.4 || ^6.0 || ^7.0",
     "symfony/finder": "^5.4 || ^6.0 || ^7.0"
