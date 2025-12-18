@@ -10,14 +10,14 @@ use CyberSpectrum\I18N\Xliff\WritableXliffDictionary;
 use CyberSpectrum\I18N\Xliff\XliffDictionary;
 use CyberSpectrum\I18N\Xliff\XliffDictionaryProvider;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 
 use function iterator_to_array;
 
-/**
- * @covers \CyberSpectrum\I18N\Xliff\XliffDictionaryProvider
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- */
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
+#[CoversClass(XliffDictionaryProvider::class)]
 class XliffDictionaryProviderTest extends TestCase
 {
     /**
@@ -25,7 +25,7 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @return array
      */
-    public function dictionaryProviderProvider(): array
+    public static function dictionaryProviderProvider(): array
     {
         return [
             'without sub dir'    => [__DIR__ . '/Fixtures/without-subdir', ''],
@@ -38,9 +38,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testGetAvailableDictionariesFromFixturesDirectory(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -60,6 +59,7 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testGetFromFixturesDirectory(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -72,9 +72,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testThrowsForUnknownDictionary(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -92,9 +91,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testGetAvailableWritableDictionariesFromFixturesDirectory(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -111,9 +109,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testGetWritable(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -126,9 +123,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testThrowsForUnknownDictionaryForWrite(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -146,9 +142,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testCreateDictionary(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);
@@ -161,9 +156,8 @@ class XliffDictionaryProviderTest extends TestCase
      *
      * @param string $fixtures The fixtures directory.
      * @param string $subDirs  The sub directory mask.
-     *
-     * @dataProvider dictionaryProviderProvider
      */
+    #[DataProvider('dictionaryProviderProvider')]
     public function testThrowsForExistingDictionary(string $fixtures, string $subDirs): void
     {
         $provider = new XliffDictionaryProvider($this->provide($fixtures), $subDirs);

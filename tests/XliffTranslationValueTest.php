@@ -8,10 +8,11 @@ use CyberSpectrum\I18N\Xliff\XliffDictionary;
 use CyberSpectrum\I18N\Xliff\XliffTranslationValue;
 use CyberSpectrum\I18N\Xliff\Xml\XliffFile;
 use CyberSpectrum\I18N\Xliff\Xml\XmlElement;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-/** @covers \CyberSpectrum\I18N\Xliff\XliffTranslationValue */
+#[CoversClass(XliffTranslationValue::class)]
 class XliffTranslationValueTest extends TestCase
 {
     public function testEmptyValue(): void
@@ -39,9 +40,9 @@ class XliffTranslationValueTest extends TestCase
     /**
      * Mock a dictionary.
      *
-     * @return MockObject|XliffDictionary
+     * @return MockObject<XliffDictionary>
      */
-    private function mockDictionary(): XliffDictionary
+    private function mockDictionary(): MockObject&XliffDictionary
     {
         $mock = $this
             ->getMockBuilder(XliffDictionary::class)

@@ -9,14 +9,13 @@ use CyberSpectrum\I18N\Exception\TranslationNotFoundException;
 use CyberSpectrum\I18N\Xliff\WritableXliffDictionary;
 use CyberSpectrum\I18N\Xliff\WritableXliffTranslationValue;
 use CyberSpectrum\I18N\Xliff\XliffTranslationValue;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 use function iterator_to_array;
 
-/**
- * @covers \CyberSpectrum\I18N\Xliff\WritableXliffDictionary
- * @covers \CyberSpectrum\I18N\Xliff\XliffTranslationValue
- * @covers \CyberSpectrum\I18N\Xliff\WritableXliffTranslationValue
- */
+#[CoversClass(WritableXliffDictionary::class)]
+#[CoversClass(XliffTranslationValue::class)]
+#[CoversClass(WritableXliffTranslationValue::class)]
 class WritableXliffDictionaryTest extends TestCase
 {
     public function testInstantiation(): void

@@ -7,9 +7,10 @@ namespace CyberSpectrum\I18N\Xliff\Test;
 use CyberSpectrum\I18N\Configuration\Configuration;
 use CyberSpectrum\I18N\Configuration\Definition\DictionaryDefinition;
 use CyberSpectrum\I18N\Xliff\XliffDictionaryDefinitionBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/** @covers \CyberSpectrum\I18N\Xliff\XliffDictionaryDefinitionBuilder */
+#[CoversClass(XliffDictionaryDefinitionBuilder::class)]
 class XliffDictionaryDefinitionBuilderTest extends TestCase
 {
     public function testBuilding(): void

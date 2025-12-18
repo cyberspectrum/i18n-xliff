@@ -8,10 +8,11 @@ use CyberSpectrum\I18N\Xliff\WritableXliffDictionary;
 use CyberSpectrum\I18N\Xliff\WritableXliffTranslationValue;
 use CyberSpectrum\I18N\Xliff\Xml\XliffFile;
 use CyberSpectrum\I18N\Xliff\Xml\XmlElement;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-/** @covers \CyberSpectrum\I18N\Xliff\WritableXliffTranslationValue */
+#[CoversClass(WritableXliffTranslationValue::class)]
 class WritableXliffTranslationValueTest extends TestCase
 {
     public function testEmptyValue(): void
@@ -69,9 +70,9 @@ class WritableXliffTranslationValueTest extends TestCase
      *
      * @param int $expectedChangeCount Expected count how often "markChanged" should be triggered.
      *
-     * @return MockObject|WritableXliffDictionary
+     * @return MockObject<WritableXliffDictionary>
      */
-    private function mockDictionary(int $expectedChangeCount = 0): WritableXliffDictionary
+    private function mockDictionary(int $expectedChangeCount = 0): MockObject&WritableXliffDictionary
     {
         $mock = $this
             ->getMockBuilder(WritableXliffDictionary::class)

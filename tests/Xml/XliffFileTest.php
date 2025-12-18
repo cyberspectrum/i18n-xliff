@@ -8,11 +8,12 @@ use CyberSpectrum\I18N\Xliff\Xml\XliffFile;
 use DateTimeInterface;
 use DOMText;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
 
-/** @covers \CyberSpectrum\I18N\Xliff\Xml\XliffFile */
+#[CoversClass(XliffFile::class)]
 class XliffFileTest extends TestCase
 {
     public function testBasicDocumentContainsValidDefaults(): void

@@ -7,11 +7,12 @@ namespace CyberSpectrum\I18N\Xliff\Test;
 use CyberSpectrum\I18N\Exception\TranslationNotFoundException;
 use CyberSpectrum\I18N\Xliff\XliffDictionary;
 use CyberSpectrum\I18N\Xliff\XliffTranslationValue;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \CyberSpectrum\I18N\Xliff\XliffDictionary
- * @covers \CyberSpectrum\I18N\Xliff\XliffTranslationValue
- */
+use function iterator_to_array;
+
+#[CoversClass(XliffDictionary::class)]
+#[CoversClass(XliffTranslationValue::class)]
 class XliffDictionaryTest extends TestCase
 {
     public function testInstantiation(): void
@@ -22,7 +23,7 @@ class XliffDictionaryTest extends TestCase
         self::assertSame('de', $dictionary->getTargetLanguage());
         self::assertSame(
             ['test-string-with-only-source', 'test-string-with-source-and-target'],
-            \iterator_to_array($dictionary->keys())
+            iterator_to_array($dictionary->keys())
         );
         self::assertInstanceOf(
             XliffTranslationValue::class,
